@@ -64,7 +64,7 @@
 
       <div class="right">
         <div class="box__account">
-          <div class="image"><img src="./images/z5.png"></div>
+          <div class="image"><img src="z5.png"></div>
           <div class="name"><i class="fa-solid fa-heart"></i> <span>Zymal</span> <i class="fa-solid fa-heart"></i></div>
           <div class="balloon_one"><img width="100" src="./images/balloon1.png"></div>
           <div class="balloon_two"><img width="100" src="./images/balloon2.png"></div>
@@ -131,17 +131,26 @@
     const musicControl = document.getElementById("musicControl");
     const musicIcon = document.getElementById("musicIcon");
 
-    function enableMusic() {
+    // PC: Try autoplay immediately
+    window.addEventListener("load", () => {
+      audio.play().catch(() => {
+        console.log("Autoplay blocked, waiting first gesture...");
+      });
+    });
+
+    // Mobile unlock: ANY interaction (scroll, touch, click) plays music
+    function unlockAudio() {
       audio.play().then(() => {
         catcher.classList.add("hide");
       }).catch(err => console.log(err));
     }
 
-    ["click", "touchstart", "pointerdown"].forEach(evt => {
-      window.addEventListener(evt, enableMusic, { once: true });
-      catcher.addEventListener(evt, enableMusic, { once: true });
+    ["click", "touchstart", "scroll", "pointerdown"].forEach(evt => {
+      window.addEventListener(evt, unlockAudio, { once: true });
+      catcher.addEventListener(evt, unlockAudio, { once: true });
     });
 
+    // Play/Pause Toggle
     let isPlaying = true;
 
     musicControl.addEventListener("click", () => {
@@ -237,4 +246,3 @@
 
 </body>
 </html>
-
